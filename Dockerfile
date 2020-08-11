@@ -6,7 +6,7 @@
 #    By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/01 22:16:08 by olaurine          #+#    #+#              #
-#    Updated: 2020/08/11 17:06:33 by olaurine         ###   ########.fr        #
+#    Updated: 2020/08/11 18:22:32 by olaurine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,33 +21,39 @@ php7.3-cli php7.3-zip php7.3-soap php7.3-imap nginx mariadb-server openssl \
 && rm -rf /etc/nginx/sites-enabled/default \
 && mkdir -p /var/www/olaurine
 
+# config access
+RUN chown -R www-data /var/www/* && chmod -R 755 /var/www/*
+
 # ssl sertificate
 RUN mkdir /etc/nginx/ssl
 RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out \
 /etc/nginx/ssl/olaurine.pem -keyout /etc/nginx/ssl/olaurine.key -subj \
 "/C=RU/ST=Kazan/L=Kazan/O=21 School/OU=olaurine/CN=olaurine"
 
-
-# adding phpmyadmin & wordpress
-RUN chown -R www-data /var/www/* && chmod -R 755 /var/www/*
-ADD srcs/wordpress-5.4.2.tar.gz /var/www/olaurine
-ADD srcs/phpMyAdmin.tar.gz /var/www/olaurine
-COPY srcs/wp-config.php /var/www/olaurine/wordpress
-COPY srcs/config.inc.php /var/www/olaurine/phpmyadmin
-RUN rm /var/www/olaurine/phpmyadmin/config.sample.inc.php
-
 # nginx configure
-# COPY srcs/wp_nginx /etc/nginx/sites-available/
-# RUN ln -s /etc/nginx/sites-available/wp_nginx /etc/nginx/sites-enabled/wp_nginx
-
+COPY srcs/olaurine /etc/nginx/sites-available/
+RUN ln -s /etc/nginx/sites-available/olaurine /etc/nginx/sites-enabled/olaurine
 
 # database creation
-# COPY srcs/database_creation.sh /var/
-# RUN bash /var/database_creation.sh
+RUN service mysql start
+RUN echo "CREATE DATABASE wordpress;" | mysql -u root --skip-password
+RUN echo "GRANT ALL PRIVILEGES ON wordpress.* TO 'root'@'localhost' WITH GRANT OPTION;" | mysql -u root --skip-password
+RUN echo "update mysql.user set plugin='mysql_native_password' where user='root';" | mysql -u root --skip-password
+RUN echo "FLUSH PRIVILEGES;" | mysql -u root --skip-password
 
-# EXPOSE 80 443
+# phpmyadmin
+RUN mkdir /var/www/olaurine/phpmyadmin
+ADD srcs/phpMyAdmin.tar.gz /var/www/olaurine
+COPY srcs/config.inc.php /var/www/olaurine/phpmyadmin
+
+# adding phpmyadmin & wordpress
+ADD srcs/wordpress-5.4.2.tar.gz /var/www/olaurine
+COPY srcs/wp-config.php /var/www/olaurine/wordpress
+RUN rm -rf /var/www/olaurine/phpmyadmin/config.sample.inc.php
+
+EXPOSE 80 443
 
 #server starter
-# COPY srcs/run_server.sh /var/
-# COPY srcs/autoindexing.sh /var/
-# CMD bash /var/run_server.sh
+COPY srcs/run_server.sh /var/
+COPY srcs/autoindexing.sh /var/
+CMD bash /var/run_server.sh
