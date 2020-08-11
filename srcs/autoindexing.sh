@@ -13,21 +13,21 @@ if (( "$arg" == 0 || "$arg" == 1 ))
 then
 	if (( "$arg" == 0 ))
 	then
-	if grep -q "$ind_on" "$site_conf"
-	then
-		sed -i "s/$ind_on/$ind_off/g" "$site_conf"
-		service nginx restart
-	fi
-echo "$ind_off"
+		if grep -q "$ind_on" "$site_conf"
+		then
+			sed -i "s/$ind_on/$ind_off/g" "$site_conf"
+			service nginx restart
+		fi
+		echo "$ind_off"
 	elif (( "$arg" == 1 ))
-then
-	if grep -q "$ind_off" "$site_conf"
 	then
-		sed -i "s/$ind_off/$ind_on/g" "$site_conf"
-		service nginx restart
+		if grep -q "$ind_off" "$site_conf"
+		then
+			sed -i "s/$ind_off/$ind_on/g" "$site_conf"
+			service nginx restart
+		fi
+		echo "$ind_on"
 	fi
-	echo "$ind_on"
-fi
 exit 0
 else
 	echo "argument incorrect, please try again"
