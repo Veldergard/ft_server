@@ -6,7 +6,7 @@
 #    By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/01 22:16:08 by olaurine          #+#    #+#              #
-#    Updated: 2020/08/11 18:22:32 by olaurine         ###   ########.fr        #
+#    Updated: 2020/08/11 18:35:27 by olaurine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,11 +35,8 @@ COPY srcs/olaurine /etc/nginx/sites-available/
 RUN ln -s /etc/nginx/sites-available/olaurine /etc/nginx/sites-enabled/olaurine
 
 # database creation
-RUN service mysql start
-RUN echo "CREATE DATABASE wordpress;" | mysql -u root --skip-password
-RUN echo "GRANT ALL PRIVILEGES ON wordpress.* TO 'root'@'localhost' WITH GRANT OPTION;" | mysql -u root --skip-password
-RUN echo "update mysql.user set plugin='mysql_native_password' where user='root';" | mysql -u root --skip-password
-RUN echo "FLUSH PRIVILEGES;" | mysql -u root --skip-password
+COPY srcs/db.sh /var/
+RUN bash /var/db.sh
 
 # phpmyadmin
 RUN mkdir /var/www/olaurine/phpmyadmin
