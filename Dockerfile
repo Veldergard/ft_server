@@ -6,7 +6,7 @@
 #    By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/01 22:16:08 by olaurine          #+#    #+#              #
-#    Updated: 2020/08/12 18:58:44 by olaurine         ###   ########.fr        #
+#    Updated: 2020/08/12 19:04:47 by olaurine         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ RUN bash /var/db.sh
 # phpmyadmin
 RUN mkdir /var/www/olaurine/phpmyadmin
 ADD srcs/phpMyAdmin.tar.gz /var/www/olaurine
-RUN mv /var/www/deddara/phpMyAdmin-4.9.5-all-languages /var/www/olaurine/phpmyadmin
+RUN mv /var/www/olaurine/phpMyAdmin-4.9.5-all-languages /var/www/olaurine/phpmyadmin
 COPY srcs/config.inc.php /var/www/olaurine/phpmyadmin
 
 # adding phpmyadmin & wordpress
