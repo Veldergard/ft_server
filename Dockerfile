@@ -1,5 +1,7 @@
 FROM debian:buster
 
+RUN apt-get update && apt-get install -y --no-install-recommends apt-utils
+
 RUN apt-get update && \
 apt-get upgrade -y && \
 apt-get install -y vim wget php7.3-fpm php7.3-common php7.3-mysql php7.3-gmp \
