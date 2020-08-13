@@ -1,15 +1,3 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Dockerfile                                         :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: olaurine <olaurine@student.42.fr>          +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2020/08/01 22:16:08 by olaurine          #+#    #+#              #
-#    Updated: 2020/08/12 19:08:41 by olaurine         ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 FROM debian:buster
 
 RUN apt update && \
@@ -43,14 +31,14 @@ ADD srcs/phpMyAdmin.tar.gz /var/www/olaurine
 RUN mv /var/www/olaurine/phpMyAdmin-4.9.5-all-languages /var/www/olaurine/phpmyadmin
 COPY srcs/config.inc.php /var/www/olaurine/phpmyadmin
 
-# adding phpmyadmin & wordpress
+# wordpress
 ADD srcs/wordpress-5.4.2.tar.gz /var/www/olaurine
 COPY srcs/wp-config.php /var/www/olaurine/wordpress
 RUN rm -rf /var/www/olaurine/phpmyadmin/config.sample.inc.php
 
 EXPOSE 80 443
 
-#server starter
+# server starter
 COPY srcs/run_server.sh /var/
 COPY srcs/autoindexing.sh /var/
 CMD bash /var/run_server.sh
