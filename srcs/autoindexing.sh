@@ -1,4 +1,4 @@
-site_conf='/etc/nginx/sites-available/site'
+site_conf='/etc/nginx/sites-available/olaurine'
 ind_off='autoindex off'
 ind_on='autoindex on'
 
